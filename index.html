@@ -52,7 +52,6 @@
             z-index: 2;
         }
         
-        
         .particles {
             position: fixed;
             width: 100%;
@@ -76,7 +75,6 @@
             100% { transform: translateY(-100px) scale(1); }
         }
         
-      
         header {
             grid-column: 1 / -1;
             text-align: center;
@@ -251,7 +249,6 @@
             box-shadow: 0 0 15px rgba(156, 137, 184, 0.4);
         }
         
-       
         .history-section {
             background: var(--card-bg);
             border-radius: 20px;
@@ -394,9 +391,7 @@
             color: var(--long-break);
         }
         
-        
         .notes-section {
-            grid-column: 1 / -1;
             background: var(--card-bg);
             border-radius: 20px;
             padding: 30px;
@@ -517,7 +512,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-      
         .controls-section {
             grid-column: 1 / -1;
             display: grid;
@@ -591,6 +585,99 @@
         }
         
       
+        .music-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+        }
+        
+        .music-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .music-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .music-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-top: 8px;
+        }
+        
+        .music-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .music-btn {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+        
+        .music-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .music-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(74, 111, 165, 0.4);
+        }
+        
+        .music-player {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            border-radius: 15px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .music-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .no-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.1rem;
+        }
+        
         @media (max-width: 900px) {
             .container {
                 grid-template-columns: 1fr;
@@ -610,7 +697,7 @@
             }
         }
         
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
             .timer-display-container {
                 width: 220px;
                 height: 220px;
@@ -632,6 +719,10 @@
             .mode-btn {
                 padding: 10px 16px;
                 font-size: 0.9rem;
+            }
+            
+            .music-buttons {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -663,7 +754,6 @@
             100% { box-shadow: 0 0 0 0 rgba(74, 111, 165, 0); }
         }
         
-        
         .floating {
             animation: floating 3s ease-in-out infinite;
         }
@@ -674,44 +764,14 @@
             100% { transform: translateY(0px); }
         }
 
-  @keyframes floating {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-    100% { transform: translateY(0px); }
-  }
-
-  footer {
-    text-align: center;
-    padding: 30px 20px;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 1rem;
-    margin: 0 auto;
-    width: 100%;
-    max-width: 1200px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    box-sizing: border-box;
-    margin-left: 350px;
-  }
-
-  .pulse {
-    animation: pulse 2.5s infinite;
-  }
-
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(106, 137, 204, 0.7); }
-    70% { box-shadow: 0 0 0 20px rgba(106, 137, 204, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(106, 137, 204, 0); }
-  }
-
-  @media (max-width: 600px) {
-    footer {
-      padding: 20px 15px;
-      font-size: 0.9rem;
-      margin-left: 1px;
-    }
-  }
-</style>
-
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -783,6 +843,41 @@
                 </div>
             </div>
         </section>
+        <section class="music-section">
+            <div class="music-container">
+                <div class="music-header">
+                    <h2 class="section-title"><i class="fas fa-music"></i> Focus Music</h2>
+                    <p class="music-subtitle">Choose a playlist to stay focused while studying</p>
+                </div>
+                
+                <div class="music-buttons">
+                    <button class="music-btn" data-src="https://www.youtube.com/embed/jfKfPfyJRdk">
+                        <i class="fas fa-music"></i> Lofi Beats
+                    </button>
+                    <button class="music-btn" data-src="https://www.youtube.com/embed/2OEL4P1Rz04">
+                        <i class="fas fa-music"></i> Classical
+                    </button>
+                    <button class="music-btn" data-src="https://www.youtube.com/embed/1ZYbU82GVz4">
+                        <i class="fas fa-cloud-rain"></i> Rain Sounds
+                    </button>
+                    <button class="music-btn" data-src="https://www.youtube.com/embed/ODIHw8NvhEE ">
+                        <i class="fas fa-fire"></i> Motivation Mix
+                    </button>
+                 <button class="music-btn" data-src="https://www.youtube.com/embed/qnk-GcQl5fo">
+             <i class="fas fa-moon"></i> 
+            </button>
+
+
+                </div>
+                
+                <div class="music-player">
+                    <div class="no-video" id="noVideoMessage">
+                        <p>Select a playlist to begin</p>
+                    </div>
+                    <iframe class="music-iframe" id="musicIframe" allow="autoplay; encrypted-media" allowfullscreen style="display:none;"></iframe>
+                </div>
+            </div>
+        </section>
         
         <section class="notes-section">
             <h2 class="section-title"><i class="fas fa-sticky-note"></i> Task Notes</h2>
@@ -848,14 +943,15 @@
                 </button>
             </div>
         </section>
-        <footer >
-            <p >Stay focused. Stay mindful. Stay you.<br>Built with ❤️ by Muhammad Qasim</p>
+        
+        <footer>
+            <p>Stay focused. Stay mindful. Stay you.<br>Built with ❤️ by Muhammad Qasim</p>
         </footer>
     </div>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-         
+          
             const timerDisplay = document.getElementById('timer');
             const modeDisplay = document.getElementById('mode');
             const startBtn = document.getElementById('startBtn');
@@ -877,8 +973,10 @@
             const noteInput = document.getElementById('noteInput');
             const addNoteBtn = document.getElementById('addNoteBtn');
             const notesList = document.getElementById('notesList');
-            
-           
+            const musicButtons = document.querySelectorAll('.music-btn');
+            const musicIframe = document.getElementById('musicIframe');
+            const noVideoMessage = document.getElementById('noVideoMessage');
+            let currentActiveButton = null;
             let timer;
             let isRunning = false;
             let currentMode = 'focus'; 
@@ -886,8 +984,6 @@
             let seconds = 0;
             let totalSeconds = minutes * 60;
             let progress = 0;
-            
-          
             let focusTime = 0;
             let shortBreakTime = 0;
             let longBreakTime = 0;
@@ -895,6 +991,7 @@
             let sessionCount = 0;
             let history = [];
             
+          
             let notes = [];
             
            
@@ -917,13 +1014,13 @@
                 }
             }
             
-          
+         
             function updateTimerDisplay() {
                 const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
                 const secs = (totalSeconds % 60).toString().padStart(2, '0');
                 timerDisplay.textContent = `${mins}:${secs}`;
                 
-              
+               
                 progress = ((minutes * 60 - totalSeconds) / (minutes * 60)) * 360;
                 circularProgress.style.background = `conic-gradient(${getModeColor()} ${progress}deg, rgba(255,255,255,0.1) ${progress}deg)`;
             }
@@ -938,7 +1035,7 @@
                 }
             }
             
-           
+         
             function updateStatsDisplay() {
                 focusTimeDisplay.textContent = `${Math.floor(focusTime / 60)}m`;
                 shortBreakTimeDisplay.textContent = `${Math.floor(shortBreakTime / 60)}m`;
@@ -946,7 +1043,7 @@
                 sessionsCountDisplay.textContent = sessionsCompleted;
             }
             
-            
+         
             function addHistoryItem(type, duration) {
                 const now = new Date();
                 const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -967,6 +1064,7 @@
                     </div>
                     <div class="session-time">${timeString}</div>
                 `;
+                
                 if (historyList.querySelector('.empty-history')) {
                     historyList.innerHTML = '';
                 }
@@ -974,6 +1072,8 @@
                 historyList.prepend(historyItem);
                 history.unshift({ type, duration, time: timeString });
             }
+            
+          
             function addNote() {
                 const text = noteInput.value.trim();
                 if (!text) return;
@@ -993,6 +1093,8 @@
                 renderNotes();
                 noteInput.value = '';
             }
+            
+      
             function renderNotes() {
                 if (notes.length === 0) {
                     notesList.innerHTML = '<div class="empty-notes">No notes yet. Add your first note!</div>';
@@ -1012,6 +1114,8 @@
                     `;
                     notesList.appendChild(noteItem);
                 });
+                
+           
                 document.querySelectorAll('.delete-note').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const id = parseInt(this.dataset.id);
@@ -1019,10 +1123,13 @@
                     });
                 });
             }
+        
             function deleteNote(id) {
                 notes = notes.filter(note => note.id !== id);
                 renderNotes();
             }
+            
+           
             function startTimer() {
                 if (isRunning) return;
                 
@@ -1033,7 +1140,7 @@
                 timer = setInterval(() => {
                     totalSeconds--;
                     
-                   
+                 
                     switch(currentMode) {
                         case 'focus': focusTime++; break;
                         case 'shortBreak': shortBreakTime++; break;
@@ -1049,10 +1156,10 @@
                         startBtn.disabled = false;
                         timerDisplay.classList.remove('pulse');
                         
-                        
+                      
                         playAlarmSound();
                         
-                      
+                    
                         const sessionDuration = minutes * 60;
                         addHistoryItem(currentMode, sessionDuration);
                         
@@ -1081,7 +1188,7 @@
             
            
             function playAlarmSound() {
-                
+              
                 const context = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = context.createOscillator();
                 const gainNode = context.createGain();
@@ -1097,11 +1204,11 @@
                 setTimeout(() => oscillator.stop(), 500);
             }
             
-       
+          
             function switchMode(mode) {
                 currentMode = mode;
                 
-             
+               
                 modeBtns.forEach(btn => {
                     btn.classList.remove('active');
                     if (btn.dataset.mode === mode) {
@@ -1109,7 +1216,7 @@
                     }
                 });
                 
-               
+              
                 switch(mode) {
                     case 'focus':
                         modeDisplay.textContent = 'Focus Session';
@@ -1143,13 +1250,13 @@
                 timerDisplay.classList.remove('pulse');
             }
             
-           
+          
             function resetTimer() {
                 pauseTimer();
                 switchMode(currentMode);
             }
             
-          
+         
             function setPresetTime(e) {
                 const selectedMinutes = parseInt(e.target.dataset.minutes);
                 
@@ -1165,6 +1272,8 @@
                     updateTimerDisplay();
                 }
             }
+            
+           
             function clearHistory() {
                 history = [];
                 focusTime = 0;
@@ -1175,15 +1284,48 @@
                 historyList.innerHTML = '<div class="empty-history">No sessions yet. Start a session to see history.</div>';
                 updateStatsDisplay();
             }
+            
+        
+            function handleMusicButtonClick() {
+                const videoSrc = this.getAttribute('data-src') + '?autoplay=1';
+                
+               
+                musicButtons.forEach(btn => btn.classList.remove('active'));
+                
+             
+                this.classList.add('active');
+                currentActiveButton = this;
+                
+         
+                musicIframe.setAttribute('src', videoSrc);
+                musicIframe.style.display = 'block';
+                noVideoMessage.style.display = 'none';
+            }
+            
+          
+            function stopMusic() {
+                if (currentActiveButton) {
+                    musicIframe.setAttribute('src', '');
+                    musicIframe.style.display = 'none';
+                    noVideoMessage.style.display = 'flex';
+                    currentActiveButton.classList.remove('active');
+                    currentActiveButton = null;
+                }
+            }
+            
+            
             function init() {
                 createParticles();
                 updateTimerDisplay();
-                renderNotes(); 
+                renderNotes();
+                
+               
                 startBtn.addEventListener('click', startTimer);
                 pauseBtn.addEventListener('click', pauseTimer);
                 resetBtn.addEventListener('click', resetTimer);
                 clearHistoryBtn.addEventListener('click', clearHistory);
                 addNoteBtn.addEventListener('click', addNote);
+                
                 noteInput.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
@@ -1199,6 +1341,11 @@
                     btn.addEventListener('click', () => {
                         switchMode(btn.dataset.mode);
                     });
+                });
+                
+              
+                musicButtons.forEach(button => {
+                    button.addEventListener('click', handleMusicButtonClick);
                 });
             }
             
