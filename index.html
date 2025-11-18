@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeepFlow Pro Timer - Dark Theme</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -26,6 +29,7 @@
             --dark-hover: #1a2230;
             --card-bg: rgba(22, 27, 34, 0.9);
             --note-bg: rgba(22, 27, 34, 0.7);
+            --coin-color: #ffd700;
         }
         
         body {
@@ -84,6 +88,55 @@
             margin-bottom: 10px;
             padding: 20px 0;
             border-bottom: 1px solid var(--dark-border);
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(48, 54, 61, 0.3);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+        
+        .user-id {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .help-btn {
+            background: rgba(48, 54, 61, 0.3);
+            color: var(--dark-text);
+            border: 1px solid var(--dark-border);
+            padding: 8px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .help-btn:hover {
+            background: rgba(48, 54, 61, 0.5);
+            transform: translateY(-2px);
         }
         
         h1 {
@@ -277,7 +330,7 @@
         
         .stats {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             margin-bottom: 25px;
         }
@@ -306,6 +359,7 @@
         .short-break-stat { color: var(--short-break); }
         .long-break-stat { color: var(--long-break); }
         .sessions-stat { color: var(--primary); }
+        .coins-stat { color: var(--coin-color); }
         
         .stat-label {
             font-size: 1rem;
@@ -685,6 +739,294 @@
             font-size: 1.1rem;
         }
         
+        .coins-section {
+            background: var(--card-bg);
+            border: 1px solid var(--dark-border);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+            grid-column: 1 / -1;
+        }
+        
+        .coins-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .coin-balance-card {
+            background: rgba(48, 54, 61, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid var(--coin-color);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+        
+        .coin-icon {
+            font-size: 3rem;
+            color: var(--coin-color);
+            margin-bottom: 15px;
+        }
+        
+        .coin-balance {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--coin-color);
+            margin: 10px 0;
+        }
+        
+        .coin-label {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        .coin-rate {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 10px;
+        }
+        
+        .rewards-section {
+            background: rgba(48, 54, 61, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+        }
+        
+        .rewards-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--coin-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .rewards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .reward-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(13, 17, 23, 0.5);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .reward-item:hover {
+            background: rgba(13, 17, 23, 0.7);
+            transform: translateX(5px);
+        }
+        
+        .reward-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .reward-info p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        .reward-cost {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--coin-color);
+        }
+        
+        .reward-btn {
+            padding: 8px 15px;
+            background: var(--coin-color);
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .reward-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .reward-btn:disabled {
+            background: rgba(255, 215, 0, 0.3);
+            color: rgba(0, 0, 0, 0.5);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: var(--card-bg);
+            border: 1px solid var(--dark-border);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 25px;
+            border-bottom: 1px solid var(--dark-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close-modal {
+            background: rgba(48, 54, 61, 0.3);
+            color: var(--dark-text);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-modal:hover {
+            background: rgba(255, 100, 100, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .modal-content {
+            padding: 25px;
+        }
+        
+        .guide-section {
+            margin-bottom: 30px;
+        }
+        
+        .guide-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .guide-section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .guide-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .guide-step {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(48, 54, 61, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .guide-step:hover {
+            background: rgba(48, 54, 61, 0.3);
+            transform: translateX(5px);
+        }
+        
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: var(--dark-text);
+            border-radius: 50%;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex-grow: 1;
+        }
+        
+        .step-content h4 {
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .step-content p {
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+        
+        .important-note {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid var(--focus);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .important-note h4 {
+            color: var(--focus);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
         @media (max-width: 900px) {
             .container {
                 grid-template-columns: 1fr;
@@ -701,6 +1043,19 @@
             
             .timer-display {
                 font-size: 3.5rem;
+            }
+            
+            .coins-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header-top {
+                flex-direction: column;
+                gap: 15px;
             }
         }
         
@@ -730,6 +1085,15 @@
             
             .music-buttons {
                 grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .guide-step {
+                flex-direction: column;
+                gap: 10px;
             }
         }
         
@@ -779,6 +1143,48 @@
             margin-top: 30px;
             border-top: 1px solid var(--dark-border);
         }
+        
+        .sync-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .sync-success {
+            background: rgba(78, 205, 196, 0.2);
+            color: var(--short-break);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+        
+        .sync-error {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--focus);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+        
+        .sync-loading {
+            background: rgba(143, 171, 255, 0.2);
+            color: var(--primary);
+            border: 1px solid rgba(143, 171, 255, 0.3);
+        }
+        
+        .coin-animation {
+            animation: coinSpin 1s ease-out;
+        }
+        
+        @keyframes coinSpin {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -786,8 +1192,21 @@
     
     <div class="container">
         <header>
-            <h1><i class="fas fa-wind floating"></i> DeepFlow Pro Timer</h1>
-            <p class="subtitle">Dark Theme - Enhance focus, maximize productivity, find balance</p>
+            <div class="header-content">
+                <div class="header-top">
+                    <div class="user-info">
+                        <i class="fas fa-user"></i>
+                        <span>User ID: <span class="user-id" id="headerUserId">Loading...</span></span>
+                    </div>
+                    <button class="help-btn" id="helpBtn">
+                        <i class="fas fa-question-circle"></i> How to Use
+                    </button>
+                </div>
+                <div>
+                    <h1><i class="fas fa-wind floating"></i> DeepFlow Pro Timer</h1>
+                    <p class="subtitle">Dark Theme - Enhance focus, maximize productivity, find balance</p>
+                </div>
+            </div>
         </header>
         
         <section class="timer-section">
@@ -807,6 +1226,9 @@
                 </button>
                 <button class="btn btn-secondary" id="resetBtn">
                     <i class="fas fa-redo"></i> Reset
+                </button>
+                <button class="btn" id="syncBtn">
+                    <i class="fas fa-cloud-upload-alt"></i> Sync
                 </button>
             </div>
             
@@ -837,16 +1259,88 @@
                     <div class="stat-label">Sessions</div>
                     <div class="stat-value sessions-stat" id="sessionsCount">0</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-label">Coins Earned</div>
+                    <div class="stat-value coins-stat" id="coinsEarned">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Coin Balance</div>
+                    <div class="stat-value coins-stat" id="coinBalance">0</div>
+                </div>
             </div>
             
             <div class="history-container">
                 <div class="history-header">
                     <h3 class="history-title"><i class="fas fa-history"></i> Session History</h3>
-                    <button class="clear-btn" id="clearHistory">Clear</button>
+                    <div>
+                        <button class="clear-btn" id="clearHistory">Clear</button>
+                        <button class="clear-btn" id="loadFromCloud">
+                            <i class="fas fa-cloud-download-alt"></i> Load
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="history-items" id="historyList">
                     <div class="empty-history">No sessions yet. Start a session to see history.</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="coins-section">
+            <div class="coins-container">
+                <div class="coin-balance-card">
+                    <div class="coin-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="coin-balance" id="totalCoinBalance">0</div>
+                    <div class="coin-label">Total Coins</div>
+                    <div class="coin-rate">Earn 0.5 coins per hour of focus time</div>
+                </div>
+                
+                <div class="rewards-section">
+                    <h3 class="rewards-title"><i class="fas fa-gift"></i> Rewards Shop</h3>
+                    <div class="rewards-list">
+                        <div class="reward-item">
+                            <div class="reward-info">
+                                <h4>Custom Timer Sound</h4>
+                                <p>Unlock premium timer sounds</p>
+                            </div>
+                            <div class="reward-cost">
+                                <i class="fas fa-coins"></i> 10
+                                <button class="reward-btn" id="unlockSound">Unlock</button>
+                            </div>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-info">
+                                <h4>Dark Theme Variants</h4>
+                                <p>Access additional dark themes</p>
+                            </div>
+                            <div class="reward-cost">
+                                <i class="fas fa-coins"></i> 20
+                                <button class="reward-btn" id="unlockThemes">Unlock</button>
+                            </div>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-info">
+                                <h4>Advanced Statistics</h4>
+                                <p>Get detailed analytics and insights</p>
+                            </div>
+                            <div class="reward-cost">
+                                <i class="fas fa-coins"></i> 30
+                                <button class="reward-btn" id="unlockStats">Unlock</button>
+                            </div>
+                        </div>
+                        <div class="reward-item">
+                            <div class="reward-info">
+                                <h4>Premium Badge</h4>
+                                <p>Show off your achievement</p>
+                            </div>
+                            <div class="reward-cost">
+                                <i class="fas fa-coins"></i> 50
+                                <button class="reward-btn" id="unlockBadge">Unlock</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -889,6 +1383,18 @@
             <h2 class="section-title"><i class="fas fa-sticky-note"></i> Task Notes</h2>
             
             <div class="notes-container">
+                <div class="notes-header">
+                    <h3>Personal Notes</h3>
+                    <div class="notes-controls">
+                        <button class="clear-btn" id="saveNotesToCloud">
+                            <i class="fas fa-cloud-upload-alt"></i> Save
+                        </button>
+                        <button class="clear-btn" id="loadNotesFromCloud">
+                            <i class="fas fa-cloud-download-alt"></i> Load
+                        </button>
+                    </div>
+                </div>
+                
                 <div class="note-input-container">
                     <textarea class="note-input" id="noteInput" placeholder="Add your tasks or notes here..."></textarea>
                     <button class="add-note-btn" id="addNoteBtn">
@@ -911,6 +1417,14 @@
                     <button class="preset-btn" data-minutes="30">30 min</button>
                     <button class="preset-btn" data-minutes="45">45 min</button>
                     <button class="preset-btn" data-minutes="60">60 min</button>
+                </div>
+                
+                <h3 style="margin-top: 20px;"><i class="fas fa-user"></i> User ID</h3>
+                <div class="settings-group">
+                    <input type="text" id="userId" placeholder="Enter unique user ID" readonly>
+                    <button class="btn" style="margin-top: 10px; width: 100%" id="generateUserId">
+                        <i class="fas fa-sync"></i> Generate New ID
+                    </button>
                 </div>
             </div>
             
@@ -944,8 +1458,8 @@
                     <label for="volume">Volume</label>
                     <input type="range" id="volume" min="0" max="100" value="80">
                 </div>
-                <button class="btn" style="margin-top:15px; width:100%">
-                    <i class="fas fa-save"></i> Save Settings
+                <button class="btn" style="margin-top:15px; width:100%" id="saveSettingsBtn">
+                    <i class="fas fa-save"></i> Save Settings to Cloud
                 </button>
             </div>
         </section>
@@ -955,14 +1469,181 @@
         </footer>
     </div>
     
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-question-circle"></i> How to Use DeepFlow Pro Timer</h2>
+                <button class="close-modal" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="guide-section">
+                    <h3><i class="fas fa-user-circle"></i> Your User ID</h3>
+                    <div class="guide-steps">
+                        <div class="guide-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Remember Your User ID</h4>
+                                <p>Your unique 6-digit User ID is displayed at the top of the app. This ID is important for saving and loading your data from the cloud.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Save Your User ID</h4>
+                                <p>Write down your User ID somewhere safe. If you lose it, you won't be able to access your saved data. You can generate a new ID, but this will create a new profile.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="important-note">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Important</h4>
+                        <p>Your User ID is the key to your data. Without it, you cannot retrieve your saved sessions, notes, or coins. Keep it safe!</p>
+                    </div>
+                </div>
+                
+                <div class="guide-section">
+                    <h3><i class="fas fa-play-circle"></i> Using the Timer</h3>
+                    <div class="guide-steps">
+                        <div class="guide-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Select Focus Duration</h4>
+                                <p>Choose your desired focus session length from the preset buttons (15, 25, 30, 45, or 60 minutes).</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Start the Timer</h4>
+                                <p>Click the "Start" button to begin your focus session. The circular progress indicator will show your progress.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Take Breaks</h4>
+                                <p>After each focus session, take a short break (5 minutes by default). After 4 sessions, take a longer break (15 minutes by default).</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Earn Coins</h4>
+                                <p>You earn 0.5 coins for every hour of focused work. Use these coins to unlock premium features in the Rewards Shop.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-section">
+                    <h3><i class="fas fa-sticky-note"></i> Managing Notes</h3>
+                    <div class="guide-steps">
+                        <div class="guide-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Add Notes</h4>
+                                <p>Type your task or note in the text area and click "Add" or press Enter to save it.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Delete Notes</h4>
+                                <p>Click the "X" button on any note to delete it.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Save Notes to Cloud</h4>
+                                <p>Click the "Save" button in the notes section to store your notes in the cloud.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Load Notes from Cloud</h4>
+                                <p>Click the "Load" button to retrieve your saved notes from the cloud using your User ID.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-section">
+                    <h3><i class="fas fa-cloud"></i> Data Management</h3>
+                    <div class="guide-steps">
+                        <div class="guide-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Save Data to Cloud</h4>
+                                <p>Click the "Sync" button in the timer controls to save your session data, notes, and settings to the cloud.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Load Data from Cloud</h4>
+                                <p>Click the "Load" button in the session history section to retrieve your data from the cloud.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Clear History</h4>
+                                <p>Use the "Clear" button to reset your session history and statistics.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-section">
+                    <h3><i class="fas fa-music"></i> Focus Music</h3>
+                    <div class="guide-steps">
+                        <div class="guide-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Select Music</h4>
+                                <p>Choose from various focus music options like Lofi Beats, Classical, Rain Sounds, Motivation Mix, or Quran.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Play Music</h4>
+                                <p>Click on any music option to start playing it in the embedded player.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="syncStatus" class="sync-status" style="display: none;">
+        <i class="fas fa-sync"></i>
+        <span>Syncing...</span>
+    </div>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-          
+            // Firebase configuration
+            const firebaseConfig = {
+                databaseURL: "https://deep-flow-b2a08-default-rtdb.firebaseio.com/"
+            };
+            
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+            
+            // DOM Elements
             const timerDisplay = document.getElementById('timer');
             const modeDisplay = document.getElementById('mode');
             const startBtn = document.getElementById('startBtn');
             const pauseBtn = document.getElementById('pauseBtn');
             const resetBtn = document.getElementById('resetBtn');
+            const syncBtn = document.getElementById('syncBtn');
             const modeBtns = document.querySelectorAll('.mode-btn');
             const presetBtns = document.querySelectorAll('.preset-btn');
             const particlesContainer = document.getElementById('particles');
@@ -971,17 +1652,36 @@
             const shortBreakTimeDisplay = document.getElementById('shortBreakTime');
             const longBreakTimeDisplay = document.getElementById('longBreakTime');
             const sessionsCountDisplay = document.getElementById('sessionsCount');
+            const coinsEarnedDisplay = document.getElementById('coinsEarned');
+            const coinBalanceDisplay = document.getElementById('coinBalance');
+            const totalCoinBalanceDisplay = document.getElementById('totalCoinBalance');
             const historyList = document.getElementById('historyList');
             const clearHistoryBtn = document.getElementById('clearHistory');
+            const loadFromCloudBtn = document.getElementById('loadFromCloud');
             const shortBreakInput = document.getElementById('shortBreak');
             const longBreakInput = document.getElementById('longBreak');
             const breakFrequencyInput = document.getElementById('breakFrequency');
             const noteInput = document.getElementById('noteInput');
             const addNoteBtn = document.getElementById('addNoteBtn');
             const notesList = document.getElementById('notesList');
+            const saveNotesToCloudBtn = document.getElementById('saveNotesToCloud');
+            const loadNotesFromCloudBtn = document.getElementById('loadNotesFromCloud');
             const musicButtons = document.querySelectorAll('.music-btn');
             const musicIframe = document.getElementById('musicIframe');
             const noVideoMessage = document.getElementById('noVideoMessage');
+            const userIdInput = document.getElementById('userId');
+            const headerUserId = document.getElementById('headerUserId');
+            const generateUserIdBtn = document.getElementById('generateUserId');
+            const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+            const syncStatus = document.getElementById('syncStatus');
+            const unlockSoundBtn = document.getElementById('unlockSound');
+            const unlockThemesBtn = document.getElementById('unlockThemes');
+            const unlockStatsBtn = document.getElementById('unlockStats');
+            const unlockBadgeBtn = document.getElementById('unlockBadge');
+            const helpBtn = document.getElementById('helpBtn');
+            const helpModal = document.getElementById('helpModal');
+            const closeModal = document.getElementById('closeModal');
+            
             let currentActiveButton = null;
             let timer;
             let isRunning = false;
@@ -995,12 +1695,195 @@
             let longBreakTime = 0;
             let sessionsCompleted = 0;
             let sessionCount = 0;
+            let coinsEarned = 0;
+            let coinBalance = 0;
             let history = [];
-            
-          
             let notes = [];
+            let unlockedFeatures = {
+                sound: false,
+                themes: false,
+                stats: false,
+                badge: false
+            };
             
-           
+            // Function to generate 6-digit user ID
+            function generateUserId() {
+                let userId = '';
+                for (let i = 0; i < 6; i++) {
+                    userId += Math.floor(Math.random() * 10);
+                }
+                return userId;
+            }
+            
+            // Function to show sync status
+            function showSyncStatus(message, type) {
+                syncStatus.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check' : type === 'error' ? 'fa-exclamation-triangle' : 'fa-sync'}"></i><span>${message}</span>`;
+                syncStatus.className = `sync-status sync-${type}`;
+                syncStatus.style.display = 'flex';
+                
+                if (type !== 'loading') {
+                    setTimeout(() => {
+                        syncStatus.style.display = 'none';
+                    }, 3000);
+                }
+            }
+            
+            // Function to get current user ID
+            function getUserId() {
+                let userId = userIdInput.value;
+                if (!userId) {
+                    userId = generateUserId();
+                    userIdInput.value = userId;
+                    localStorage.setItem('deepFlowUserId', userId);
+                }
+                return userId;
+            }
+            
+            // Function to update header user ID
+            function updateHeaderUserId() {
+                headerUserId.textContent = getUserId();
+            }
+            
+            // Function to save data to Firebase
+            async function saveToFirebase(dataType, data) {
+                showSyncStatus('Saving to cloud...', 'loading');
+                try {
+                    const userId = getUserId();
+                    await database.ref(`users/${userId}/${dataType}`).set(data);
+                    showSyncStatus(`${dataType} saved successfully!`, 'success');
+                    return true;
+                } catch (error) {
+                    console.error('Error saving to Firebase:', error);
+                    showSyncStatus('Error saving data', 'error');
+                    return false;
+                }
+            }
+            
+            // Function to load data from Firebase
+            async function loadFromFirebase(dataType) {
+                showSyncStatus(`Loading ${dataType}...`, 'loading');
+                try {
+                    const userId = getUserId();
+                    const snapshot = await database.ref(`users/${userId}/${dataType}`).once('value');
+                    const data = snapshot.val();
+                    
+                    if (data) {
+                        showSyncStatus(`${dataType} loaded successfully!`, 'success');
+                        return data;
+                    } else {
+                        showSyncStatus(`No ${dataType} found`, 'error');
+                        return null;
+                    }
+                } catch (error) {
+                    console.error('Error loading from Firebase:', error);
+                    showSyncStatus('Error loading data', 'error');
+                    return null;
+                }
+            }
+            
+            // Function to save session data
+            async function saveSessionData() {
+                const sessionData = {
+                    focusTime: focusTime,
+                    shortBreakTime: shortBreakTime,
+                    longBreakTime: longBreakTime,
+                    sessionsCompleted: sessionsCompleted,
+                    coinsEarned: coinsEarned,
+                    coinBalance: coinBalance,
+                    history: history,
+                    unlockedFeatures: unlockedFeatures,
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                return await saveToFirebase('sessionData', sessionData);
+            }
+            
+            // Function to load session data
+            async function loadSessionData() {
+                const data = await loadFromFirebase('sessionData');
+                if (data) {
+                    focusTime = data.focusTime || 0;
+                    shortBreakTime = data.shortBreakTime || 0;
+                    longBreakTime = data.longBreakTime || 0;
+                    sessionsCompleted = data.sessionsCompleted || 0;
+                    coinsEarned = data.coinsEarned || 0;
+                    coinBalance = data.coinBalance || 0;
+                    history = data.history || [];
+                    unlockedFeatures = data.unlockedFeatures || {
+                        sound: false,
+                        themes: false,
+                        stats: false,
+                        badge: false
+                    };
+                    
+                    updateStatsDisplay();
+                    renderHistory();
+                    updateRewardButtons();
+                    
+                    // Update the history display
+                    if (history.length > 0) {
+                        historyList.innerHTML = '';
+                        history.forEach(item => {
+                            const historyItem = document.createElement('div');
+                            historyItem.classList.add('history-item');
+                            historyItem.innerHTML = `
+                                <div>
+                                    <span class="session-type ${item.type === 'focus' ? 'focus-session' : 
+                                                           item.type === 'shortBreak' ? 'short-break-session' : 'long-break-session'}">
+                                        ${item.type === 'focus' ? 'Focus' : 
+                                         item.type === 'shortBreak' ? 'Short Break' : 'Long Break'}
+                                    </span>
+                                    <span class="session-duration">${Math.floor(item.duration / 60)} min</span>
+                                </div>
+                                <div class="session-time">${item.time}</div>
+                            `;
+                            historyList.appendChild(historyItem);
+                        });
+                    }
+                }
+            }
+            
+            // Function to save notes
+            async function saveNotes() {
+                return await saveToFirebase('notes', notes);
+            }
+            
+            // Function to load notes
+            async function loadNotes() {
+                const data = await loadFromFirebase('notes');
+                if (data) {
+                    notes = data;
+                    renderNotes();
+                }
+            }
+            
+            // Function to save settings
+            async function saveSettings() {
+                const settings = {
+                    shortBreak: parseInt(shortBreakInput.value),
+                    longBreak: parseInt(longBreakInput.value),
+                    breakFrequency: parseInt(breakFrequencyInput.value),
+                    alarmSound: document.getElementById('alarmSound').value,
+                    volume: document.getElementById('volume').value,
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                return await saveToFirebase('settings', settings);
+            }
+            
+            // Function to load settings
+            async function loadSettings() {
+                const data = await loadFromFirebase('settings');
+                if (data) {
+                    shortBreakInput.value = data.shortBreak || 5;
+                    longBreakInput.value = data.longBreak || 15;
+                    breakFrequencyInput.value = data.breakFrequency || 4;
+                    document.getElementById('alarmSound').value = data.alarmSound || 'bell';
+                    document.getElementById('volume').value = data.volume || 80;
+                }
+            }
+            
+            // Function to create particles
             function createParticles() {
                 const particleCount = 30;
                 
@@ -1008,7 +1891,6 @@
                     const particle = document.createElement('div');
                     particle.classList.add('particle');
                     
-                   
                     const size = Math.random() * 20 + 5;
                     particle.style.width = `${size}px`;
                     particle.style.height = `${size}px`;
@@ -1020,18 +1902,17 @@
                 }
             }
             
-         
+            // Function to update timer display
             function updateTimerDisplay() {
                 const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
                 const secs = (totalSeconds % 60).toString().padStart(2, '0');
                 timerDisplay.textContent = `${mins}:${secs}`;
                 
-               
                 progress = ((minutes * 60 - totalSeconds) / (minutes * 60)) * 360;
                 circularProgress.style.background = `conic-gradient(${getModeColor()} ${progress}deg, rgba(48, 54, 61, 0.3) ${progress}deg)`;
             }
             
-           
+            // Function to get mode color
             function getModeColor() {
                 switch(currentMode) {
                     case 'focus': return 'var(--focus)';
@@ -1041,45 +1922,113 @@
                 }
             }
             
-         
+            // Function to update stats display
             function updateStatsDisplay() {
                 focusTimeDisplay.textContent = `${Math.floor(focusTime / 60)}m`;
                 shortBreakTimeDisplay.textContent = `${Math.floor(shortBreakTime / 60)}m`;
                 longBreakTimeDisplay.textContent = `${Math.floor(longBreakTime / 60)}m`;
                 sessionsCountDisplay.textContent = sessionsCompleted;
+                coinsEarnedDisplay.textContent = coinsEarned.toFixed(1);
+                coinBalanceDisplay.textContent = coinBalance.toFixed(1);
+                totalCoinBalanceDisplay.textContent = coinBalance.toFixed(1);
             }
             
-         
+            // Function to add coins
+            function addCoins(seconds) {
+                // 0.5 coins per hour = 0.5/3600 coins per second
+                const coinsToAdd = (seconds / 3600) * 0.5;
+                coinsEarned += coinsToAdd;
+                coinBalance += coinsToAdd;
+                
+                // Animate coin icon
+                const coinIcon = document.querySelector('.coin-icon i');
+                coinIcon.classList.add('coin-animation');
+                setTimeout(() => {
+                    coinIcon.classList.remove('coin-animation');
+                }, 1000);
+                
+                updateStatsDisplay();
+            }
+            
+            // Function to update reward buttons
+            function updateRewardButtons() {
+                unlockSoundBtn.disabled = coinBalance < 10 || unlockedFeatures.sound;
+                unlockThemesBtn.disabled = coinBalance < 20 || unlockedFeatures.themes;
+                unlockStatsBtn.disabled = coinBalance < 30 || unlockedFeatures.stats;
+                unlockBadgeBtn.disabled = coinBalance < 50 || unlockedFeatures.badge;
+                
+                if (unlockedFeatures.sound) {
+                    unlockSoundBtn.textContent = 'Unlocked';
+                }
+                if (unlockedFeatures.themes) {
+                    unlockThemesBtn.textContent = 'Unlocked';
+                }
+                if (unlockedFeatures.stats) {
+                    unlockStatsBtn.textContent = 'Unlocked';
+                }
+                if (unlockedFeatures.badge) {
+                    unlockBadgeBtn.textContent = 'Unlocked';
+                }
+            }
+            
+            // Function to unlock feature
+            function unlockFeature(feature, cost) {
+                if (coinBalance >= cost && !unlockedFeatures[feature]) {
+                    coinBalance -= cost;
+                    unlockedFeatures[feature] = true;
+                    updateStatsDisplay();
+                    updateRewardButtons();
+                    saveSessionData();
+                    showSyncStatus(`Feature unlocked successfully!`, 'success');
+                }
+            }
+            
+            // Function to render history
+            function renderHistory() {
+                if (history.length === 0) {
+                    historyList.innerHTML = '<div class="empty-history">No sessions yet. Start a session to see history.</div>';
+                    return;
+                }
+                
+                historyList.innerHTML = '';
+                history.forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.classList.add('history-item');
+                    historyItem.innerHTML = `
+                        <div>
+                            <span class="session-type ${item.type === 'focus' ? 'focus-session' : 
+                                                   item.type === 'shortBreak' ? 'short-break-session' : 'long-break-session'}">
+                                ${item.type === 'focus' ? 'Focus' : 
+                                 item.type === 'shortBreak' ? 'Short Break' : 'Long Break'}
+                            </span>
+                            <span class="session-duration">${Math.floor(item.duration / 60)} min</span>
+                        </div>
+                        <div class="session-time">${item.time}</div>
+                    `;
+                    historyList.appendChild(historyItem);
+                });
+            }
+            
+            // Function to add history item
             function addHistoryItem(type, duration) {
                 const now = new Date();
                 const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 
-                const historyItem = document.createElement('div');
-                historyItem.classList.add('history-item');
+                const historyItem = {
+                    type: type,
+                    duration: duration,
+                    time: timeString,
+                    timestamp: now.toISOString()
+                };
                 
-                const durationMins = Math.floor(duration / 60);
+                history.unshift(historyItem);
+                renderHistory();
                 
-                historyItem.innerHTML = `
-                    <div>
-                        <span class="session-type ${type === 'focus' ? 'focus-session' : 
-                                               type === 'shortBreak' ? 'short-break-session' : 'long-break-session'}">
-                            ${type === 'focus' ? 'Focus' : 
-                             type === 'shortBreak' ? 'Short Break' : 'Long Break'}
-                        </span>
-                        <span class="session-duration">${durationMins} min</span>
-                    </div>
-                    <div class="session-time">${timeString}</div>
-                `;
-                
-                if (historyList.querySelector('.empty-history')) {
-                    historyList.innerHTML = '';
-                }
-                
-                historyList.prepend(historyItem);
-                history.unshift({ type, duration, time: timeString });
+                // Auto-save to Firebase
+                saveSessionData();
             }
             
-          
+            // Function to add note
             function addNote() {
                 const text = noteInput.value.trim();
                 if (!text) return;
@@ -1092,15 +2041,19 @@
                     id: Date.now(),
                     text,
                     time: timeString,
-                    date: dateString
+                    date: dateString,
+                    timestamp: now.toISOString()
                 };
                 
                 notes.unshift(note);
                 renderNotes();
                 noteInput.value = '';
+                
+                // Auto-save notes to Firebase
+                saveNotes();
             }
             
-      
+            // Function to render notes
             function renderNotes() {
                 if (notes.length === 0) {
                     notesList.innerHTML = '<div class="empty-notes">No notes yet. Add your first note!</div>';
@@ -1121,7 +2074,7 @@
                     notesList.appendChild(noteItem);
                 });
                 
-           
+                // Add event listeners to delete buttons
                 document.querySelectorAll('.delete-note').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const id = parseInt(this.dataset.id);
@@ -1129,13 +2082,17 @@
                     });
                 });
             }
-        
+            
+            // Function to delete note
             function deleteNote(id) {
                 notes = notes.filter(note => note.id !== id);
                 renderNotes();
+                
+                // Auto-save notes to Firebase
+                saveNotes();
             }
             
-           
+            // Function to start timer
             function startTimer() {
                 if (isRunning) return;
                 
@@ -1143,12 +2100,21 @@
                 startBtn.disabled = true;
                 timerDisplay.classList.add('pulse');
                 
+                let lastSecond = totalSeconds;
+                
                 timer = setInterval(() => {
                     totalSeconds--;
                     
-                 
+                    // Update time for the current mode
                     switch(currentMode) {
-                        case 'focus': focusTime++; break;
+                        case 'focus': 
+                            focusTime++; 
+                            // Add coins for focus time (0.5 coins per hour)
+                            if (totalSeconds < lastSecond) {
+                                addCoins(1);
+                                lastSecond = totalSeconds;
+                            }
+                            break;
                         case 'shortBreak': shortBreakTime++; break;
                         case 'longBreak': longBreakTime++; break;
                     }
@@ -1162,10 +2128,10 @@
                         startBtn.disabled = false;
                         timerDisplay.classList.remove('pulse');
                         
-                      
+                        // Play alarm sound
                         playAlarmSound();
                         
-                    
+                        // Add to history
                         const sessionDuration = minutes * 60;
                         addHistoryItem(currentMode, sessionDuration);
                         
@@ -1173,7 +2139,7 @@
                             sessionsCompleted++;
                             sessionCount++;
                             
-                           
+                            // Check if it's time for a long break
                             if (sessionCount >= parseInt(breakFrequencyInput.value)) {
                                 switchMode('longBreak');
                                 sessionCount = 0;
@@ -1181,20 +2147,23 @@
                                 switchMode('shortBreak');
                             }
                         } else {
-                           
+                            // After break, switch to focus
                             switchMode('focus');
                         }
                         
                         totalSeconds = minutes * 60;
                         updateTimerDisplay();
                         updateStatsDisplay();
+                        
+                        // Auto-save to Firebase
+                        saveSessionData();
                     }
                 }, 1000);
             }
             
-           
+            // Function to play alarm sound
             function playAlarmSound() {
-              
+                // Create a simple alarm sound using the Web Audio API
                 const context = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = context.createOscillator();
                 const gainNode = context.createGain();
@@ -1210,11 +2179,11 @@
                 setTimeout(() => oscillator.stop(), 500);
             }
             
-          
+            // Function to switch mode
             function switchMode(mode) {
                 currentMode = mode;
                 
-               
+                // Update mode buttons
                 modeBtns.forEach(btn => {
                     btn.classList.remove('active');
                     if (btn.dataset.mode === mode) {
@@ -1222,7 +2191,7 @@
                     }
                 });
                 
-              
+                // Update mode display and set time
                 switch(mode) {
                     case 'focus':
                         modeDisplay.textContent = 'Focus Session';
@@ -1241,12 +2210,11 @@
                         break;
                 }
                 
-               
                 totalSeconds = minutes * 60;
                 updateTimerDisplay();
             }
             
-           
+            // Function to pause timer
             function pauseTimer() {
                 if (!isRunning) return;
                 
@@ -1256,13 +2224,13 @@
                 timerDisplay.classList.remove('pulse');
             }
             
-          
+            // Function to reset timer
             function resetTimer() {
                 pauseTimer();
                 switchMode(currentMode);
             }
             
-         
+            // Function to set preset time
             function setPresetTime(e) {
                 const selectedMinutes = parseInt(e.target.dataset.minutes);
                 
@@ -1279,7 +2247,7 @@
                 }
             }
             
-           
+            // Function to clear history
             function clearHistory() {
                 history = [];
                 focusTime = 0;
@@ -1289,26 +2257,29 @@
                 sessionCount = 0;
                 historyList.innerHTML = '<div class="empty-history">No sessions yet. Start a session to see history.</div>';
                 updateStatsDisplay();
+                
+                // Save cleared data to Firebase
+                saveSessionData();
             }
             
-        
+            // Function to handle music button click
             function handleMusicButtonClick() {
                 const videoSrc = this.getAttribute('data-src') + '?autoplay=1';
                 
-               
+                // Remove active class from all buttons
                 musicButtons.forEach(btn => btn.classList.remove('active'));
                 
-             
+                // Add active class to clicked button
                 this.classList.add('active');
                 currentActiveButton = this;
                 
-         
+                // Update iframe source
                 musicIframe.setAttribute('src', videoSrc);
                 musicIframe.style.display = 'block';
                 noVideoMessage.style.display = 'none';
             }
             
-          
+            // Function to stop music
             function stopMusic() {
                 if (currentActiveButton) {
                     musicIframe.setAttribute('src', '');
@@ -1319,18 +2290,80 @@
                 }
             }
             
+            // Modal functions
+            function openHelpModal() {
+                helpModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
             
+            function closeHelpModal() {
+                helpModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            
+            // Initialize the application
             function init() {
                 createParticles();
                 updateTimerDisplay();
                 renderNotes();
+                renderHistory();
+                updateRewardButtons();
                 
-               
+                // Set user ID
+                let storedUserId = localStorage.getItem('deepFlowUserId');
+                if (!storedUserId) {
+                    storedUserId = generateUserId();
+                    localStorage.setItem('deepFlowUserId', storedUserId);
+                }
+                userIdInput.value = storedUserId;
+                updateHeaderUserId();
+                
+                // Load data from Firebase on startup
+                loadSessionData();
+                loadNotes();
+                loadSettings();
+                
+                // Add event listeners
                 startBtn.addEventListener('click', startTimer);
                 pauseBtn.addEventListener('click', pauseTimer);
                 resetBtn.addEventListener('click', resetTimer);
+                syncBtn.addEventListener('click', saveSessionData);
                 clearHistoryBtn.addEventListener('click', clearHistory);
+                loadFromCloudBtn.addEventListener('click', loadSessionData);
                 addNoteBtn.addEventListener('click', addNote);
+                saveNotesToCloudBtn.addEventListener('click', saveNotes);
+                loadNotesFromCloudBtn.addEventListener('click', loadNotes);
+                saveSettingsBtn.addEventListener('click', saveSettings);
+                generateUserIdBtn.addEventListener('click', function() {
+                    const newUserId = generateUserId();
+                    userIdInput.value = newUserId;
+                    updateHeaderUserId();
+                    localStorage.setItem('deepFlowUserId', newUserId);
+                    showSyncStatus('New User ID generated!', 'success');
+                });
+                
+                // Reward buttons
+                unlockSoundBtn.addEventListener('click', function() {
+                    unlockFeature('sound', 10);
+                });
+                unlockThemesBtn.addEventListener('click', function() {
+                    unlockFeature('themes', 20);
+                });
+                unlockStatsBtn.addEventListener('click', function() {
+                    unlockFeature('stats', 30);
+                });
+                unlockBadgeBtn.addEventListener('click', function() {
+                    unlockFeature('badge', 50);
+                });
+                
+                // Modal events
+                helpBtn.addEventListener('click', openHelpModal);
+                closeModal.addEventListener('click', closeHelpModal);
+                helpModal.addEventListener('click', function(e) {
+                    if (e.target === helpModal) {
+                        closeHelpModal();
+                    }
+                });
                 
                 noteInput.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
@@ -1349,7 +2382,6 @@
                     });
                 });
                 
-              
                 musicButtons.forEach(button => {
                     button.addEventListener('click', handleMusicButtonClick);
                 });
